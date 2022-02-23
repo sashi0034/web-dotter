@@ -1,5 +1,6 @@
 import React from "react";
-import logo from "./logo.svg";
+import { MainCanavas } from "./MainCanvas";
+
 import "./App.css";
 
 
@@ -7,6 +8,7 @@ import "./App.css";
 export class App extends React.Component
 {
 	public override render(): React.ReactNode {
+
 		return(
 			<div className="app-base">
 				<div className="left-bar">
@@ -14,7 +16,7 @@ export class App extends React.Component
 				</div>
 
 				<div className="main-document">
-					メインコンテンツ
+					<MainCanavas/>
 				</div>
 
 				<div className="right-bar">
