@@ -10,12 +10,14 @@
 	background-color: #555;
 	text-align: left;
 	position: fixed;
+	z-index: 1;
 }
 .main-document{
 	margin-left: 15%;
 	margin-right: 15%;
 	width: 100%;
 	text-align: center;
+	z-index: 0;
 }
 .right-bar{
 	margin-left: 85%;
@@ -24,5 +26,6 @@
 	background-color: #555;
 	text-align: left;
 	position: fixed;
+	z-index: 1;
 }
 

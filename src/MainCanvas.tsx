@@ -8,26 +8,41 @@ import sadpanda from "./sadpanda_24x24.png"
 interface IMainCanvasProps
 {
 }
+
+class MouseState
+{
+    public x: number=0;
+    public y: number=0;
+    public isMiddle: boolean=false;
+    public middleFromX: number=0;
+    public middleFromY: number=0;
+}
+
+
 interface IMainCanvasState
 {
-    posX: number,
-    posY: number,
-    style: {[name: string]: string}
+    stylePos: {[name: string]: string}
 }
 
 
 
 export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasState>
 {
+    private mouse: MouseState;
+    private posLeft: number=0;
+    private posTop: number=0;
+    private oldPosLeft: number=0;
+    private oldPosTop: number=0;
+
     public constructor(props: IMainCanvasProps | Readonly<IMainCanvasProps>)
     {
         super(props);
 
+        this.mouse = new MouseState();
+
         this.state = 
         {
-            posX: 0,
-            posY: 0,
-            style: {left: "0px", top: "0px"}
+            stylePos: {left: "0px", top: "0px"}
         }
     }
 
@@ -38,20 +53,37 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
         {
             const rect = body.getBoundingClientRect();
 
-            this.setState({
-                posX: rect.left + window.pageXOffset,
-                posY: rect.top + window.pageYOffset,
+            document.addEventListener("mousemove", (e)=>{
+                if (this.mouse.isMiddle===true)
+                {
+                    this.posLeft = this.oldPosLeft + e.clientX-this.mouse.middleFromX;
+                    this.posTop = this.oldPosTop + e.clientY-this.mouse.middleFromY;
+
+                    this.setState({
+                        stylePos: {
+                            left: this.posLeft+"px",
+                            top: this.posTop+"px"
+                        }
+                    });
+                }
+            })
+            document.addEventListener("mousedown", (e)=>{
+                if (e.button===1) 
+                {
+                    this.mouse.middleFromX = e.clientX;
+                    this.mouse.middleFromY = e.clientY;
+                    this.mouse.isMiddle = true;
+                }
+            });
+            document.addEventListener("mouseup", (e)=>{
+                if (e.button===1) 
+                {
+                    this.oldPosLeft = this.posLeft;
+                    this.oldPosTop = this.posTop;
+                    this.mouse.isMiddle = false;
+                }
             });
 
-            document.addEventListener("mousemove", (e)=>{
-                console.log(e.clientX, e.clientY)
-                this.setState({
-                    style: {
-                        left: e.clientX-this.state.posX+"px",
-                        top: e.clientY-this.state.posY+"px"
-                    }
-                });
-            })
         }
     }
 
@@ -65,7 +97,7 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
                     alt="サッドパンダの画像" 
                     title="sadpanda" 
                     id="canvas-body"
-                    style={this.state.style}></img>
+                    style={this.state.stylePos}></img>
             </div>
         ); 
     }
