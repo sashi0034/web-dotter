@@ -21,7 +21,7 @@ class MouseState
 
 interface IMainCanvasState
 {
-    stylePos: {[name: string]: string}
+    style: {[tag: string]: string}
 }
 
 
@@ -33,6 +33,11 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
     private posTop: number=0;
     private oldPosLeft: number=0;
     private oldPosTop: number=0;
+    private scale: number = 2;
+    private sizeWidth = 16;
+    private sizeHeight = 16;
+    private stylePos: {[tag: string]: string} = {left: "0px", top: "0px"};
+    private styleSize: {[tag: string]: string} = {width: this.sizeWidth*this.scale + "px", height: this.sizeHeight*this.scale+"px"};
 
     public constructor(props: IMainCanvasProps | Readonly<IMainCanvasProps>)
     {
@@ -42,8 +47,9 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
 
         this.state = 
         {
-            stylePos: {left: "0px", top: "0px"}
+            style: {}
         }
+       
     }
 
     public override componentDidMount()
@@ -51,40 +57,54 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
         let body = document.getElementById("canvas-base");
         if (body!==null)
         {
-            const rect = body.getBoundingClientRect();
-
-            document.addEventListener("mousemove", (e)=>{
-                if (this.mouse.isMiddle===true)
-                {
-                    this.posLeft = this.oldPosLeft + e.clientX-this.mouse.middleFromX;
-                    this.posTop = this.oldPosTop + e.clientY-this.mouse.middleFromY;
-
-                    this.setState({
-                        stylePos: {
-                            left: this.posLeft+"px",
-                            top: this.posTop+"px"
-                        }
-                    });
-                }
-            })
-            document.addEventListener("mousedown", (e)=>{
-                if (e.button===1) 
-                {
-                    this.mouse.middleFromX = e.clientX;
-                    this.mouse.middleFromY = e.clientY;
-                    this.mouse.isMiddle = true;
-                }
-            });
-            document.addEventListener("mouseup", (e)=>{
-                if (e.button===1) 
-                {
-                    this.oldPosLeft = this.posLeft;
-                    this.oldPosTop = this.posTop;
-                    this.mouse.isMiddle = false;
-                }
-            });
-
+            this.setEvent();
+            this.setStateStyle();
         }
+    }
+
+    private setEvent()
+    {
+        document.addEventListener("mousemove", (e)=>{
+            if (this.mouse.isMiddle===true)
+            {
+                this.posLeft = this.oldPosLeft + e.clientX-this.mouse.middleFromX;
+                this.posTop = this.oldPosTop + e.clientY-this.mouse.middleFromY;
+
+                this.stylePos = {
+                    left: this.posLeft+"px",
+                    top: this.posTop+"px"
+                }
+                this.setStateStyle();
+                
+            }
+        })
+        document.addEventListener("mousedown", (e)=>{
+            if (e.button===1) 
+            {
+                this.mouse.middleFromX = e.clientX;
+                this.mouse.middleFromY = e.clientY;
+                this.mouse.isMiddle = true;
+            }
+        });
+        document.addEventListener("mouseup", (e)=>{
+            if (e.button===1) 
+            {
+                this.oldPosLeft = this.posLeft;
+                this.oldPosTop = this.posTop;
+                this.mouse.isMiddle = false;
+            }
+        });
+        window.addEventListener("wheel", (e)=>{
+            this.scale += e.deltaY/100.0;
+            this.scale = Math.max(this.scale, 1.0);
+            this.styleSize = {width: this.sizeWidth*this.scale + "px", height: this.sizeHeight*this.scale+"px"};
+            console.log(this.styleSize);
+            this.setStateStyle();
+        });
+    }
+    private setStateStyle()
+    {
+        this.setState({style: Object.assign({}, this.stylePos, this.styleSize )});
     }
 
     public override render(): React.ReactNode 
@@ -97,7 +117,7 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
                     alt="サッドパンダの画像" 
                     title="sadpanda" 
                     id="canvas-body"
-                    style={this.state.stylePos}></img>
+                    style={this.state.style}></img>
             </div>
         ); 
     }

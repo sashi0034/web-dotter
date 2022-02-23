@@ -17,6 +17,7 @@
 	margin-right: 15%;
 	width: 100%;
 	text-align: center;
+	position: fixed;
 	z-index: 0;
 }
 .right-bar{
