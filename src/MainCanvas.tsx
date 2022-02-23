@@ -95,7 +95,7 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
             }
         });
         window.addEventListener("wheel", (e)=>{
-            this.scale += e.deltaY/100.0;
+            this.scale += -(this.scale/10) * e.deltaY/100.0;
             this.scale = Math.max(this.scale, 1.0);
             this.styleSize = {width: this.sizeWidth*this.scale + "px", height: this.sizeHeight*this.scale+"px"};
             console.log(this.styleSize);
