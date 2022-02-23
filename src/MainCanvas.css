@@ -1,13 +1,10 @@
 
-.canvas-base{
+#canvas-base{
     position: relative;
 }
 
-.canvas-content{
-    position: relative;
-    left: 0px;
-    top: 100px;
-
+#canvas-body{
+    position: absolute;
 }
 
 
