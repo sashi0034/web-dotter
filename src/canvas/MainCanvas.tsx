@@ -2,7 +2,7 @@
 import { posix } from "node:path/win32";
 import React from "react";
 import { findDOMNode } from "react-dom";
-import { CanvasDrawing } from "./CanvasDrawing"
+import { CanvasDrawing, RGBA } from "./canvasDrawing"
 import "./MainCanvas.css"
 
 
@@ -38,8 +38,8 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
     private oldPosLeft: number=0;
     private oldPosTop: number=0;
     private scale: number = 2;
-    private sizeWidth = 32;
-    private sizeHeight = 32;
+    private sizeWidth = 32*2;
+    private sizeHeight = 32*2;
     private stylePos: {[tag: string]: string} = {left: "0px", top: "0px"};
     private styleSize: {[tag: string]: string} = {width: this.sizeWidth*this.scale + "px", height: this.sizeHeight*this.scale+"px"};
     
@@ -99,7 +99,7 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
  
                     let begin = this.clientToCanvas(this.mouse.oldX, this.mouse.oldY);
                     let end = this.clientToCanvas(e.clientX, e.clientY);
-                    this.canvasDrawing.drawLine(begin.x, begin.y, end.x, end.y, "#000");
+                    this.canvasDrawing.drawLine(begin.x, begin.y, end.x, end.y, new RGBA(0, 0, 0, 255));
                 }
                 else
                 {
