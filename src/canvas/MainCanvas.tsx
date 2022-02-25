@@ -2,7 +2,9 @@
 import { posix } from "node:path/win32";
 import React from "react";
 import { findDOMNode } from "react-dom";
+import { CanvasDrawing } from "./CanvasDrawing"
 import "./MainCanvas.css"
+
 
 interface IMainCanvasProps
 {
@@ -41,8 +43,7 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
     private stylePos: {[tag: string]: string} = {left: "0px", top: "0px"};
     private styleSize: {[tag: string]: string} = {width: this.sizeWidth*this.scale + "px", height: this.sizeHeight*this.scale+"px"};
     
-    private canvasElement: HTMLCanvasElement = (null as unknown) as HTMLCanvasElement;
-    private canvasContext: CanvasRenderingContext2D = (null as unknown) as CanvasRenderingContext2D;
+    private canvasDrawing: CanvasDrawing = (null as unknown) as CanvasDrawing;
 
     private canLine: boolean = false;
 
@@ -68,17 +69,10 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
             this.setStateStyle();
 
             let canvas: HTMLCanvasElement = document.getElementById("canvas-body") as HTMLCanvasElement;
-            if (canvas !== null)
+            let context = canvas?.getContext("2d");
+            if (canvas !== null && context!==null)
             {
-                this.canvasElement = canvas;
-                let context = canvas.getContext("2d");
-                if (context!==null)
-                {
-                    context.imageSmoothingEnabled = false;
-                    context.fillStyle="#fff";
-                    context.fillRect(0, 0, this.sizeWidth, this.sizeHeight);
-                    this.canvasContext = context;
-                }
+                this.canvasDrawing = new CanvasDrawing(canvas, context, this.sizeWidth, this.sizeHeight);
             }
         }
 
@@ -102,16 +96,10 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
             {
                 if (this.canLine)
                 {// 線を引く
-                    this.canvasContext.strokeStyle = "#000";
+ 
                     let begin = this.clientToCanvas(this.mouse.oldX, this.mouse.oldY);
                     let end = this.clientToCanvas(e.clientX, e.clientY);
-                    console.log(begin, end);
-                    this.canvasContext.lineWidth=1;
-                    this.canvasContext.beginPath();
-                    this.canvasContext.moveTo(begin.x, begin.y);
-                    this.canvasContext.lineTo(end.x, end.y);
-                    this.canvasContext.closePath();
-                    this.canvasContext.stroke();
+                    this.canvasDrawing.drawLine(begin.x, begin.y, end.x, end.y, "#000");
                 }
                 else
                 {
@@ -157,7 +145,7 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
     }
     private clientToCanvas(clientX: number, clientY: number) 
     {
-        let rect = this.canvasElement.getBoundingClientRect();
+        let rect = this.canvasDrawing.getCanvasElement.getBoundingClientRect();
         let cx = clientX - rect.x + document.body.scrollLeft;
         let cy = clientY - rect.y + document.body.scrollTop;
         cx /= this.scale;

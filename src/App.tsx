@@ -1,5 +1,5 @@
 import React from "react";
-import { MainCanavas } from "./MainCanvas";
+import { MainCanavas } from "./canvas/MainCanvas";
 
 import "./App.css";
 
