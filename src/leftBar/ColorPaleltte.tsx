@@ -1,5 +1,5 @@
 import React from "react";
-import {DeliveryData} from "../App"
+import {DeliveryData} from "../deliveryData"
 import "./ColorPalette.css"
 
 class ColorElement

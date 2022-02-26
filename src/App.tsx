@@ -1,20 +1,9 @@
 import React from "react";
+import {DeliveryData} from "./deliveryData"
 import {LeftBar} from "./leftBar/LeftBar"
 import { MainCanavas } from "./canvas/MainCanvas";
 
 import "./App.css";
-
-
-export class DeliveryData
-{
-    public getPaletteColors: ()=>string[] = ()=>{return []};
-    public addPaletteColors: (color: string)=>void = ()=>{return;};
-
-    public getCurrentColor: ()=>string = () => {return ""};
-    public setCurrentColor: (color: string)=>void = ()=>{return;};
-    
-    public constructor(){}
-}
 
 
 export class App extends React.Component

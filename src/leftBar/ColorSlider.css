@@ -27,7 +27,7 @@
     font-weight: bold;
     color: #fff;
     background-color: #445;
-    
+    visibility: visible;
 }
 .add-button:hover{
     background-color: #556;

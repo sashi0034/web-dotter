@@ -1,5 +1,5 @@
 import React from "react";
-import {DeliveryData} from "../App"
+import {DeliveryData} from "../deliveryData"
 import {ColorSlider} from "./ColorSlider"
 import {ColorPalette} from "./ColorPaleltte"
 
