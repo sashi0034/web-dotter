@@ -24,6 +24,9 @@
     border-width: 1px;
     border-radius: 15%;
 }
+.palette-button:hover{
+    height: 30px;
+}
 
 
 

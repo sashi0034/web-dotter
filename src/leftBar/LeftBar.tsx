@@ -1,16 +1,16 @@
 import React from "react";
+import {DeliveryData} from "../App"
 import {ColorSlider} from "./ColorSlider"
 import {ColorPalette} from "./ColorPaleltte"
 
+
 interface ILeftBarProps
 {
-
+    deliveryData: DeliveryData
 }
 interface ILeftBarState
 {
-
 }
-
 
 export class LeftBar extends React.Component<ILeftBarProps, ILeftBarState>
 {
@@ -21,8 +21,8 @@ export class LeftBar extends React.Component<ILeftBarProps, ILeftBarState>
     public override render(): React.ReactNode {
         return(
         <div>
-            <ColorPalette/>
-            <ColorSlider/>
+            <ColorPalette deliveryData={this.props.deliveryData}/>
+            <ColorSlider deliveryData={this.props.deliveryData}/>
         </div>);
     }
 }

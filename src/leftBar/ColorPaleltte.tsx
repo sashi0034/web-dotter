@@ -1,4 +1,5 @@
 import React from "react";
+import {DeliveryData} from "../App"
 import "./ColorPalette.css"
 
 class ColorElement
@@ -12,7 +13,7 @@ class ColorElement
 
 interface IColorPaletteProps
 {
-
+    deliveryData: DeliveryData,
 }
 interface IColorPaletteState
 {
@@ -25,9 +26,16 @@ export class ColorPalette extends React.Component<IColorPaletteProps, IColorPale
     constructor(props: IColorPaletteProps)
     {
         super(props);
-
+        
         this.state = {
             colors: this.getInitialElements(),
+        }
+
+        this.props.deliveryData.getPaletteColors = () => {return this.state.colors.map(ele => ele.color)}
+        this.props.deliveryData.addPaletteColors = (val: string) => {
+            let colors = this.state.colors;
+            colors.push(new ColorElement(val, {backgroundColor: val}));
+            this.setState({colors: colors});
         }
     }
 

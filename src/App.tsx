@@ -5,15 +5,28 @@ import { MainCanavas } from "./canvas/MainCanvas";
 import "./App.css";
 
 
+export class DeliveryData
+{
+    public getPaletteColors: ()=>string[] = ()=>{return []};
+    public addPaletteColors: (color: string)=>void = ()=>{return;};
+
+    public getCurrentColor: ()=>string = () => {return ""};
+    public setCurrentColor: (color: string)=>void = ()=>{return;};
+    
+    public constructor(){}
+}
+
 
 export class App extends React.Component
 {
+	public deliveryData: DeliveryData = new DeliveryData()
+
 	public override render(): React.ReactNode {
 
 		return(
 			<div className="app-base">
 				<div className="left-bar">
-					<LeftBar/>
+					<LeftBar deliveryData={this.deliveryData}/>
 				</div>
 
 				<div className="main-document">
