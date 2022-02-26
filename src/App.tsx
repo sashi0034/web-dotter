@@ -1,4 +1,5 @@
 import React from "react";
+import {LeftBar} from "./leftBar/LeftBar"
 import { MainCanavas } from "./canvas/MainCanvas";
 
 import "./App.css";
@@ -12,7 +13,7 @@ export class App extends React.Component
 		return(
 			<div className="app-base">
 				<div className="left-bar">
-					サイドバー
+					<LeftBar/>
 				</div>
 
 				<div className="main-document">

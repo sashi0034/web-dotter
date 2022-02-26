@@ -1,0 +1,28 @@
+
+#color-slider-base{
+    padding-top: 4px;
+}
+
+
+.color-box{
+    margin-left: 4%;
+    width: 70%;
+    background-color: #999;
+}
+
+.main-color{
+    border: yellow;
+    border-width: 1px;
+}
+
+.add-button{
+    width: 20%;
+    padding: 1px;
+    margin-left: 2%;
+    font-size: 25px;
+    font-weight: bold;
+    color: #fff;
+    background-color: #445;
+}
+
+
