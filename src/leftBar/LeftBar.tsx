@@ -1,5 +1,6 @@
 import React from "react";
 import {ColorSlider} from "./ColorSlider"
+import {ColorPalette} from "./ColorPaleltte"
 
 interface ILeftBarProps
 {
@@ -20,6 +21,7 @@ export class LeftBar extends React.Component<ILeftBarProps, ILeftBarState>
     public override render(): React.ReactNode {
         return(
         <div>
+            <ColorPalette/>
             <ColorSlider/>
         </div>);
     }

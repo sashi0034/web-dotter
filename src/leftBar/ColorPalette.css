@@ -1,0 +1,29 @@
+
+#color-palette-area{
+    margin-top: 4px;
+    height: 60vh;
+}
+
+#color-palette-back{
+    height: 100%;
+    background-color: #444;
+    border: solid;
+    border-color: #222;
+    border-width: 2px;
+    border-radius: 4%;
+    margin: 1%;
+    padding: 2px;
+}
+
+.palette-button{
+    margin: 1px;
+    width: 25px;
+    height: 25px;
+    border: solid;
+    border-color: #222;
+    border-width: 1px;
+    border-radius: 4%;
+}
+
+
+
