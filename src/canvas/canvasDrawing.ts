@@ -7,6 +7,14 @@ export class RGBA
         public b: number,
         public alpha: number
     ){};
+
+    static getFromCode(code: string, alpha: number): RGBA
+    {
+        let red = parseInt(code.substring(1,3), 16);
+        let green = parseInt(code.substring(3,5), 16);
+        let blue = parseInt(code.substring(5,7), 16);
+        return new RGBA(red, green, blue, alpha);
+    }
 }
 
 

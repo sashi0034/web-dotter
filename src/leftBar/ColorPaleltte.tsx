@@ -87,7 +87,7 @@ export class ColorPalette extends React.Component<IColorPaletteProps, IColorPale
     private renderPaletteElement(index: number)
     {
         return (
-            <button className={this.state.colors[index].className} style={this.state.colors[index].style} onClick={e=>{this.onClickPallteElement(e, index)}}>
+            <button key={index} className={this.state.colors[index].className} style={this.state.colors[index].style} onClick={e=>{this.onClickPallteElement(e, index)}}>
                 &nbsp;
             </button>
         );

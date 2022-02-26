@@ -23,7 +23,7 @@ export class App extends React.Component<{},{}>
 				</div>
 
 				<div className="main-document">
-					<MainCanavas/>
+					<MainCanavas deliveryData={this.deliveryData}/>
 				</div>
 
 				<div className="right-bar">

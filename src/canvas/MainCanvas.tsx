@@ -1,6 +1,7 @@
 
 import { posix } from "node:path/win32";
 import React from "react";
+import {DeliveryData} from "../deliveryData"
 import { findDOMNode } from "react-dom";
 import { CanvasDrawing, RGBA } from "./canvasDrawing"
 import "./MainCanvas.css"
@@ -8,6 +9,7 @@ import "./MainCanvas.css"
 
 interface IMainCanvasProps
 {
+    deliveryData: DeliveryData
 }
 
 class MouseState
@@ -99,7 +101,8 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
  
                     let begin = this.clientToCanvas(this.mouse.oldX, this.mouse.oldY);
                     let end = this.clientToCanvas(e.clientX, e.clientY);
-                    this.canvasDrawing.drawLine(begin.x, begin.y, end.x, end.y, new RGBA(0, 0, 0, 255));
+                    this.canvasDrawing.drawLine(begin.x, begin.y, end.x, end.y, 
+                        RGBA.getFromCode(this.props.deliveryData.getCurrentColor(), 255));
                 }
                 else
                 {
