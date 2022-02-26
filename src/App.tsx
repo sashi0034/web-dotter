@@ -6,9 +6,13 @@ import { MainCanavas } from "./canvas/MainCanvas";
 import "./App.css";
 
 
-export class App extends React.Component
+export class App extends React.Component<{},{}>
 {
 	public deliveryData: DeliveryData = new DeliveryData()
+	public constructor(props: {})
+	{
+		super(props);
+	}
 
 	public override render(): React.ReactNode {
 

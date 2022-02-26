@@ -7,6 +7,9 @@ export class DeliveryData
 
     public getCurrentColor: ()=>string = () => {return ""};
     public setCurrentColor: (color: string)=>void = ()=>{return;};
+    public onSetCurrentColor: Array<(color: string)=>void> = [];
+    public aaa: number[] = [1, 2, 3];
+    public bbb: string = "ahooo"
     
     public constructor(){}
 }

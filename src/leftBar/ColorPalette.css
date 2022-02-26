@@ -24,6 +24,14 @@
     border-width: 1px;
     border-radius: 15%;
 }
+.selected-color{
+    border: ridge;
+    border-color: rgb(255, 213, 26);
+    border-width: 3px;
+    border-radius: 15%;  
+}
+
+
 .palette-button:hover{
     height: 30px;
 }

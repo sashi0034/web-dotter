@@ -26,7 +26,11 @@ export class ColorSlider extends React.Component<IColorSliderProps, IColorSlider
         }
         
         this.props.deliveryData.getCurrentColor = () => {return this.state.color};
-        this.props.deliveryData.setCurrentColor = (val: string) => {this.setState({color: val}); this.visibleAddButton(val);};
+        this.props.deliveryData.setCurrentColor = (val: string) => {
+            this.setState({color: val});
+            this.visibleAddButton(val);
+            this.props.deliveryData.onSetCurrentColor.forEach(f => {f(val);});
+        };
     }
     public override componentDidMount()
     {
@@ -52,8 +56,7 @@ export class ColorSlider extends React.Component<IColorSliderProps, IColorSlider
 
     private onChangeColor(e: React.ChangeEvent<HTMLInputElement>)
     {
-        this.setState({color: e.target.value});
-        this.visibleAddButton(e.target.value);
+        this.props.deliveryData.setCurrentColor(e.target.value);
     }
 
     private visibleAddButton(color: string)
