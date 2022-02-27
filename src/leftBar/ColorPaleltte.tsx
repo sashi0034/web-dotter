@@ -19,6 +19,7 @@ interface IColorPaletteProps
 interface IColorPaletteState
 {
     colors: ColorElement[],
+    deleteButtonStyle: {[tag: string]: string},
 }
 
 
@@ -35,6 +36,7 @@ export class ColorPalette extends React.Component<IColorPaletteProps, IColorPale
         
         this.state = {
             colors: this.getInitialElements(),
+            deleteButtonStyle: {"color": "#fff"},
         }
 
         this.props.deliveryData.getPaletteColors = () => {return this.state.colors.map(ele => ele.color)}
@@ -69,6 +71,7 @@ export class ColorPalette extends React.Component<IColorPaletteProps, IColorPale
             <div id="color-palette-area">
                 <div id="color-palette-back">
                     {this.renderPalette()}
+                    {this.renderDeleteButton()}
                 </div>
             </div>
         );
@@ -94,12 +97,17 @@ export class ColorPalette extends React.Component<IColorPaletteProps, IColorPale
     }
     private onClickPallteElement(e:React.MouseEvent<HTMLButtonElement, MouseEvent>, index: number)
     {
-        this.props.deliveryData.setCurrentColor(this.state.colors[index].color);
-        this.updatePaletteClassName(this.state.colors[index].color);
+        this.updateColor(this.state.colors[index].color);
+    }
+    private updateColor(color: string)
+    {
+        this.props.deliveryData.setCurrentColor(color);
+        this.updatePaletteClassName(color);
     }
     private updatePaletteClassName(currentColor: string)
     {
         let colors: ColorElement[] = this.state.colors;
+        let deleteButtonStyle = {color: "#444"};
 
         for (let i=0; i<this.state.colors.length; i++)
         {
@@ -107,10 +115,33 @@ export class ColorPalette extends React.Component<IColorPaletteProps, IColorPale
             if (this.state.colors[i].color===currentColor)
             {
                 str = ColorPalette.className.SELECTED;
+                deleteButtonStyle.color = "#fff"
             }
             colors[i].className = str;
         }
         this.setState({colors: colors});
+        this.setState({deleteButtonStyle: deleteButtonStyle});
+    }
+
+    // 削除ボタン
+    private renderDeleteButton()
+    {
+        return (
+            <button className="palette-button delete-button" onClick={(e)=>{this.onClickDeleteButton(e)}} style={this.state.deleteButtonStyle}>
+                /
+            </button>
+        );
+    }
+    private onClickDeleteButton(e: React.MouseEvent<HTMLButtonElement, MouseEvent>)
+    {
+        for (let i=0; i<this.state.colors.length; i++)
+        {
+            if (this.state.colors[i].color===this.props.deliveryData.getCurrentColor())
+            {
+                this.state.colors.splice(i, 1);
+            }
+        }
+        this.updateColor(this.props.deliveryData.getCurrentColor());
     }
 
 }
