@@ -1,6 +1,7 @@
 import React from "react";
 import {DeliveryData} from "./deliveryData"
 import {LeftBar} from "./leftBar/LeftBar"
+import {BottomBar} from "./bottomBar/BottomBar"
 import { MainCanavas } from "./canvas/MainCanvas";
 
 import "./App.css";
@@ -22,8 +23,12 @@ export class App extends React.Component<{},{}>
 					<LeftBar deliveryData={this.deliveryData}/>
 				</div>
 
-				<div className="main-document">
-					<MainCanavas deliveryData={this.deliveryData}/>
+				<div id="main-document">
+					<MainCanavas deliveryData={this.deliveryData} parentId="main-document"/>
+				</div>
+
+				<div className="bottom-bar">
+					<BottomBar deleveryData={this.deliveryData}/>
 				</div>
 
 				<div className="right-bar">

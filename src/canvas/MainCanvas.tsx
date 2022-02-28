@@ -9,7 +9,8 @@ import "./MainCanvas.css"
 
 interface IMainCanvasProps
 {
-    deliveryData: DeliveryData
+    deliveryData: DeliveryData,
+    parentId: string
 }
 
 class MouseState
@@ -138,7 +139,8 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
                 this.mouse.isMiddle = false;
             }
         });
-        window.addEventListener("wheel", (e)=>{
+        
+        document.getElementById(this.props.parentId)?.addEventListener("wheel", (e)=>{
             this.scale += -(this.scale/10) * e.deltaY/100.0;
             this.scale = Math.max(this.scale, 1.0);
             this.styleSize = {width: this.sizeWidth*this.scale + "px", height: this.sizeHeight*this.scale+"px"};
