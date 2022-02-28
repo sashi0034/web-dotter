@@ -29,6 +29,7 @@ interface ILayerFrameTableState
     curFrame: number;
     layerStyle: {[tag: string]: string}[],
     frameStyle: {[tag: string]: string}[],
+    layerFrameStyle: {[tag: string]: string}[][],
 }
 
 export class LayerFrameTable extends React.Component<IlayerFrameTableProps, ILayerFrameTableState>
@@ -45,6 +46,7 @@ export class LayerFrameTable extends React.Component<IlayerFrameTableProps, ILay
             curFrame: 0,
             layerStyle: [{}],
             frameStyle: [{}],
+            layerFrameStyle: [[{}]],
         };
         this.initButtonEvent();
     }
@@ -152,7 +154,7 @@ export class LayerFrameTable extends React.Component<IlayerFrameTableProps, ILay
                         this.setState({curLayer: layer, curFrame: i})
                         this.updateStyle(this.state.layerNum, this.state.frameNum, layer, i);
                     }}
-                    style={Object.assign( {}, this.state.frameStyle[i], this.state.layerStyle[layer])}
+                    style={this.state.layerFrameStyle[layer][i]}
                 >
                     ○
                 </th>);
@@ -164,9 +166,18 @@ export class LayerFrameTable extends React.Component<IlayerFrameTableProps, ILay
     {
         let layerStyle: {[tag: string]: string}[] = Array(layerNum).fill({});
         let frameStyle: {[tag: string]: string}[] = Array(frameNum).fill({});
-        const color = "#3aa"
+        let layerFrameStyle: {[tag: string]: string}[][] = Array(layerNum).fill([]).map(e => Array(frameNum).fill({}));
+        
+        
+        const color = "#789"
         layerStyle[curLayer] ={"backgroundColor": color};
         frameStyle[curFrame] ={"backgroundColor": color};
-        this.setState({layerStyle: layerStyle, frameStyle: frameStyle});
+        
+        for (let i=0; i<layerNum; ++i) layerFrameStyle[i][curFrame] = {"backgroundColor": color};
+        for (let i=0; i<frameNum; ++i) layerFrameStyle[curLayer][i] = {"backgroundColor": color};
+        layerFrameStyle[curLayer][curFrame] = {"backgroundColor": "#4ac"};
+        console.log(layerFrameStyle)
+
+        this.setState({layerStyle: layerStyle, frameStyle: frameStyle, layerFrameStyle: layerFrameStyle});
     }
 }
