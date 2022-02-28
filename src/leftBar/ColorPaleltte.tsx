@@ -41,9 +41,8 @@ export class ColorPalette extends React.Component<IColorPaletteProps, IColorPale
 
         this.props.deliveryData.getPaletteColors = () => {return this.state.colors.map(ele => ele.color)}
         this.props.deliveryData.addPaletteColors = (val: string) => {
-            let colors = this.state.colors;
-            colors.push(new ColorElement(val, {backgroundColor: val}, ColorPalette.className.SELECTED));
-            this.setState({colors: colors});
+            this.state.colors.push(new ColorElement(val, {backgroundColor: val}, ColorPalette.className.SELECTED));
+            this.updateColor(val);
         }
         this.props.deliveryData.onSetCurrentColor.push((v: string)=>{this.updatePaletteClassName(v)});
     }
