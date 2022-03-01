@@ -58,7 +58,6 @@ export class LayerFrameTable extends React.Component<IlayerFrameTableProps, ILay
     private initButtonEvent()
     {
         document.addEventListener("keydown", (e: globalThis.KeyboardEvent)=>{
-            console.log(e);
             if (e.shiftKey===true && e.key.toUpperCase()==='N')
             {
                 this.addNewLayer();
@@ -78,11 +77,15 @@ export class LayerFrameTable extends React.Component<IlayerFrameTableProps, ILay
         this.setState({layerSettings: settings});
         this.updateStyle(this.state.layerNum+1, this.state.frameNum, this.state.curLayer, this.state.curFrame);
         this.setState({layerNum: this.state.layerNum+1});
+
+        this.props.deliveryData.onAddLayer.forEach(f => {f();});
     }
     private addNewFrame()
     {
         this.updateStyle(this.state.layerNum, this.state.frameNum+1, this.state.curLayer, this.state.curFrame);
         this.setState({frameNum: this.state.frameNum+1});
+
+        this.props.deliveryData.onAddFrame.forEach(f => {f();});
     }
 
     public override render(): React.ReactNode {
@@ -101,7 +104,7 @@ export class LayerFrameTable extends React.Component<IlayerFrameTableProps, ILay
         for (let i=0; i<frameNum; ++i)
         {
             frameIndexes.push(
-                <th className="layer-frame-cell" style={this.state.frameStyle[i]}>{i+1}</th>
+                <th className="layer-frame-cell" style={this.state.frameStyle[i]} key={i+1}>{i+1}</th>
             )
         }
 
@@ -125,7 +128,7 @@ export class LayerFrameTable extends React.Component<IlayerFrameTableProps, ILay
     private renderRaw(layer: number)
     {
         return(
-        <tr className="layer-frame-raw">
+        <tr className="layer-frame-raw" key={layer}>
             <th className="layer-frame-cell" style={this.state.layerStyle[layer]}>
                 <input 
                     className="layer-cell-input" 
@@ -151,15 +154,23 @@ export class LayerFrameTable extends React.Component<IlayerFrameTableProps, ILay
                 <th 
                     className="layer-frame-cell"
                     onClick={(e)=>{
-                        this.setState({curLayer: layer, curFrame: i})
+                        this.changeLayerFrame(layer, i);
                         this.updateStyle(this.state.layerNum, this.state.frameNum, layer, i);
                     }}
                     style={this.state.layerFrameStyle[layer][i]}
+                    key={i}
                 >
                     ○
                 </th>);
         }
         return raws;
+    }
+    
+    private changeLayerFrame(layer: number, frame: number)
+    {
+        this.props.deliveryData.setCurLayer(layer);
+        this.props.deliveryData.setCurFrame(frame);
+        this.setState({curLayer: layer, curFrame: frame});
     }
 
     private updateStyle(layerNum: number, frameNum: number, curLayer: number, curFrame: number)
@@ -176,7 +187,6 @@ export class LayerFrameTable extends React.Component<IlayerFrameTableProps, ILay
         for (let i=0; i<layerNum; ++i) layerFrameStyle[i][curFrame] = {"backgroundColor": color};
         for (let i=0; i<frameNum; ++i) layerFrameStyle[curLayer][i] = {"backgroundColor": color};
         layerFrameStyle[curLayer][curFrame] = {"backgroundColor": "#4ac"};
-        console.log(layerFrameStyle)
 
         this.setState({layerStyle: layerStyle, frameStyle: frameStyle, layerFrameStyle: layerFrameStyle});
     }

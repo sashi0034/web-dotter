@@ -42,7 +42,7 @@ export class CanvasDrawing
         
         this.canvasContext.imageSmoothingEnabled = false;
         this.canvasContext.fillStyle="#fff";
-        this.canvasContext.fillRect(0, 0, this.width, this.height);
+        //this.canvasContext.fillRect(0, 0, this.width, this.height);
         this.imageData = this.canvasContext.getImageData(0, 0, this.width, this.height);
     }
 
@@ -119,6 +119,7 @@ export class CanvasDrawing
             this.imageData.data[base+0] = r;
             this.imageData.data[base+1] = g;
             this.imageData.data[base+2] = b;
+            this.imageData.data[base+3] = 255;
         }
     }
 }

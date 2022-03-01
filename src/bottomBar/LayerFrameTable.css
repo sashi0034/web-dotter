@@ -22,6 +22,9 @@
     border-width: 1px;
     border-radius: 3px;
 }
+.layer-frame-cell:hover{
+    filter: brightness(1.2);
+}
 
 .layer-cell-input{
     padding-left: 5%;

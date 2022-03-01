@@ -8,7 +8,14 @@ export class DeliveryData
     public getCurrentColor: ()=>string = () => {return ""};
     public setCurrentColor: (color: string)=>void = ()=>{return;};
     public onSetCurrentColor: Array<(color: string)=>void> = [];
-    
+
+    public setCurFrame: (frame: number)=>(void) = ()=>{};
+    public getCurFrame: ()=>(number) = ()=>{return 0};
+    public onAddLayer: Array<()=>void> = [];
+    public setCurLayer: (frame: number)=>(void) = ()=>{};
+    public getCurLayer: ()=>(number) = ()=>{return 0};
+    public onAddFrame: Array<()=>void> = [];
+
     public constructor(){}
 }
 

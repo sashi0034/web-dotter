@@ -3,7 +3,7 @@
     position: relative;
 }
 
-#canvas-body{
+.canvas-body{
     position: absolute;
     image-rendering: pixelated;
 }

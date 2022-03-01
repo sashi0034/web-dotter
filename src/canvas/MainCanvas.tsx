@@ -13,6 +13,12 @@ interface IMainCanvasProps
     parentId: string
 }
 
+interface IMainCanvasState
+{
+    style: {[tag: string]: string},
+    layerNum: number,
+}
+
 class MouseState
 {
     public x: number=0;
@@ -26,11 +32,13 @@ class MouseState
 }
 
 
-interface IMainCanvasState
-{
-    style: {[tag: string]: string}
-}
 
+class Frame
+{
+    constructor(
+        public layers: CanvasDrawing[] = [],
+    ){};
+}
 
 
 export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasState>
@@ -46,7 +54,11 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
     private stylePos: {[tag: string]: string} = {left: "0px", top: "0px"};
     private styleSize: {[tag: string]: string} = {width: this.sizeWidth*this.scale + "px", height: this.sizeHeight*this.scale+"px"};
     
-    private canvasDrawing: CanvasDrawing = (null as unknown) as CanvasDrawing;
+    private curLayer: number = 0;
+    private curFrame: number = 0;
+    private frames: Frame[] = [new Frame([])];
+    private get frameNum() {return this.frames.length};
+    private get layerNum() {return this.frames[0].layers.length};
 
     private canLine: boolean = false;
 
@@ -58,30 +70,42 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
 
         this.state = 
         {
-            style: {}
+            style: {},
+            layerNum: 1,
         }
-       
+      
+        this.initDeliveryFuncs();
     }
-
     public override componentDidMount()
     {
-        let base = document.getElementById("canvas-base");
-        if (base!==null)
-        {
-            this.setEvent();
-            this.setStateStyle();
-
-            let canvas: HTMLCanvasElement = document.getElementById("canvas-body") as HTMLCanvasElement;
-            let context = canvas?.getContext("2d");
-            if (canvas !== null && context!==null)
-            {
-                this.canvasDrawing = new CanvasDrawing(canvas, context, this.sizeWidth, this.sizeHeight);
-            }
-        }
-
+        this.initEvent();
+        this.setStateStyle();
     }
 
-    private setEvent()
+    private initDeliveryFuncs()
+    {
+        this.props.deliveryData.setCurFrame = (frame: number)=>{this.curFrame=frame;}
+        this.props.deliveryData.getCurFrame = ()=>{return this.curFrame;}
+
+        this.props.deliveryData.setCurLayer = (layer: number)=>{this.curLayer=layer;}
+        this.props.deliveryData.getCurLayer = ()=>{return this.curLayer;} 
+
+        this.props.deliveryData.onAddFrame.push(()=>{
+            let layers: CanvasDrawing[] = [];
+            for (let i=0; i<this.layerNum; ++i)
+            {
+                let baseLayer = this.frames[0].layers[i];
+                layers.push(new CanvasDrawing(baseLayer.getCanvasElement, baseLayer.getCanvasContext, this.sizeWidth, this.sizeHeight));
+            }
+
+            this.frames.push(new Frame(layers));
+        });
+
+        this.props.deliveryData.onAddLayer.push(()=>{
+            this.setState({layerNum: this.state.layerNum+1});
+        })
+    }
+    private initEvent()
     {
         document.addEventListener("mousemove", (e)=>{
             if (this.mouse.isMiddle===true)
@@ -99,10 +123,10 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
             {
                 if (this.canLine)
                 {// 線を引く
- 
+                    console.log(this.curFrame, this.curLayer);
                     let begin = this.clientToCanvas(this.mouse.oldX, this.mouse.oldY);
                     let end = this.clientToCanvas(e.clientX, e.clientY);
-                    this.canvasDrawing.drawLine(begin.x, begin.y, end.x, end.y, 
+                    this.frames[this.curFrame].layers[this.curLayer]?.drawLine(begin.x, begin.y, end.x, end.y, 
                         RGBA.getFromCode(this.props.deliveryData.getCurrentColor(), 255));
                 }
                 else
@@ -150,7 +174,7 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
     }
     private clientToCanvas(clientX: number, clientY: number) 
     {
-        let rect = this.canvasDrawing.getCanvasElement.getBoundingClientRect();
+        let rect = this.frames[0].layers[0].getCanvasElement.getBoundingClientRect();
         let cx = clientX - rect.x + document.body.scrollLeft;
         let cy = clientY - rect.y + document.body.scrollTop;
         cx /= this.scale;
@@ -174,16 +198,85 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
 
         return (
             <div id="canvas-base">
-                <canvas 
-                    id="canvas-body"
-                    width={this.sizeWidth} 
-                    height={this.sizeHeight}
-                    onContextMenu={() => {return false;}}
-                    style={this.state.style}/>
+                {this.renderCanvases()}
             </div>
         ); 
     }
+
+    private getLayerId(layer: number)
+    {
+        return `canvas-layer${layer}`;
+    }
+    private renderCanvases()
+    {
+        let canvas: JSX.Element[] = [];
+        for (let i=0; i<this.state.layerNum; ++i)
+        {
+            canvas.push( 
+                <LayerCanvas 
+                    key={i}
+                    id={this.getLayerId(i)}           
+                    width={this.sizeWidth} 
+                    height={this.sizeHeight}
+                    style={Object.assign({}, this.state.style, {"z-index":`${255-i}`})}
+                    pushLayer={(canvas, context)=>{
+                        this.frames.forEach(frame=>{
+                            frame.layers.push(new CanvasDrawing(canvas, context, this.sizeWidth, this.sizeHeight))
+                        });
+                    }}/>
+            );
+        }
+        return canvas;
+    }
 }
+
+
+
+
+
+interface ILayerCanvasProps
+{
+    id: string,
+    width: number,
+    height: number,
+    style: {[tag: string]: string},
+    pushLayer: (canvas: HTMLCanvasElement, context: CanvasRenderingContext2D)=>void,
+}
+interface ILayerCanvasState
+{
+}
+class LayerCanvas extends React.Component<ILayerCanvasProps, ILayerCanvasState>
+{
+    public constructor(props: ILayerCanvasProps)
+    {
+        super(props);
+    }
+    public override componentDidMount()
+    {
+        let canvas: HTMLCanvasElement = document.getElementById(this.props.id) as HTMLCanvasElement;
+        let context = canvas?.getContext("2d");
+        if (canvas !== null && context!==null)
+        {
+            this.props.pushLayer(canvas, context);
+        }
+        
+    }
+
+    public override render(): React.ReactNode 
+    {
+        return(<canvas 
+            id={this.props.id}
+            className="canvas-body"
+            width={this.props.width} 
+            height={this.props.height}
+            onContextMenu={() => {return false;}}
+            style={this.props.style}/>)    
+    }
+}
+
+
+
+
 
 
 
