@@ -4,10 +4,19 @@
     padding-top: 4px;
 }
 
+.color-slider-label{
+    margin-left: 3%;
+    margin-right: 3%;
+    padding: 3%;
+    font-size: 12px;
+    background-color: #4a4a50;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #222;
+}
 
 
 .color-box{
-    margin-left: 4%;
     border-style: none;
     width: 70%;
     background-color: rgb(124, 145, 192);

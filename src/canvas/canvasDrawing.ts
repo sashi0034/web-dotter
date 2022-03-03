@@ -41,9 +41,9 @@ export class CanvasDrawing
         this.height = height;
         
         this.canvasContext.imageSmoothingEnabled = false;
-        this.canvasContext.fillStyle="#fff";
         this.canvasContext.clearRect(0, 0, this.width, this.height);
         this.imageData = this.canvasContext.getImageData(0, 0, this.width, this.height);
+        //this.imageData = new ImageData(this.width, this.height, );
     }
 
     // 再描画

@@ -2,10 +2,11 @@
 #color-palette-area{
     margin-top: 4px;
     height: 60vh;
+    overflow: auto;
 }
 
 #color-palette-back{
-    height: 100%;
+    height: 95%;
     background-color: #444;
     border: solid;
     border-color: #222;

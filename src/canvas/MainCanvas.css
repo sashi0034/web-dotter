@@ -6,6 +6,10 @@
 .canvas-body{
     position: absolute;
     image-rendering: pixelated;
+    
+    border-style: solid;
+    border-color: #222;
+    border-width: 2px;
 }
 
 
