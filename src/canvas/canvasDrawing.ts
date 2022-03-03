@@ -42,8 +42,15 @@ export class CanvasDrawing
         
         this.canvasContext.imageSmoothingEnabled = false;
         this.canvasContext.fillStyle="#fff";
-        //this.canvasContext.fillRect(0, 0, this.width, this.height);
+        this.canvasContext.clearRect(0, 0, this.width, this.height);
         this.imageData = this.canvasContext.getImageData(0, 0, this.width, this.height);
+    }
+
+    // 再描画
+    public reRender()
+    {
+        this.canvasContext.clearRect(0, 0, this.width, this.height);
+        this.canvasContext.putImageData(this.imageData, 0, 0);
     }
 
     // 線の描画

@@ -84,7 +84,7 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
 
     private initDeliveryFuncs()
     {
-        this.props.deliveryData.setCurFrame = (frame: number)=>{this.curFrame=frame;}
+        this.props.deliveryData.setCurFrame = (frame: number)=>{this.frameChange(frame);}
         this.props.deliveryData.getCurFrame = ()=>{return this.curFrame;}
 
         this.props.deliveryData.setCurLayer = (layer: number)=>{this.curLayer=layer;}
@@ -172,6 +172,19 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
             this.setStateStyle();
         });
     }
+
+    private frameChange(nextFrame: number)
+    {
+        for (let i=0; i<this.frameNum; ++i)
+        {
+            this.frames[nextFrame].layers[i]?.reRender();
+        }
+        this.curFrame=nextFrame;
+    }
+
+
+
+
     private clientToCanvas(clientX: number, clientY: number) 
     {
         let rect = this.frames[0].layers[0].getCanvasElement.getBoundingClientRect();
@@ -218,7 +231,7 @@ export class MainCanavas extends React.Component<IMainCanvasProps, IMainCanvasSt
                     id={this.getLayerId(i)}           
                     width={this.sizeWidth} 
                     height={this.sizeHeight}
-                    style={Object.assign({}, this.state.style, {"z-index":`${255-i}`})}
+                    style={Object.assign({}, this.state.style, {"zIndex":`${255-i}`})}
                     pushLayer={(canvas, context)=>{
                         this.frames.forEach(frame=>{
                             frame.layers.push(new CanvasDrawing(canvas, context, this.sizeWidth, this.sizeHeight))
